@@ -80,6 +80,23 @@ class WOD(threading.Thread):
 
         return True
 
+    def get_job(self, idx):
+        try:
+            idx = int(idx)
+        except ValueError as e:
+            self.delayed_print("That's not a number, silly tuna")
+            return None
+
+        if idx == -1:
+            return None
+        try:
+            job = self.job_list[idx]
+        except IndexError as e:
+            self.delayed_print("Did you hit your head when you were little?")
+            return None
+
+        return job
+
     ##############################
     #           COMMANDS
     ##############################
@@ -100,19 +117,19 @@ class WOD(threading.Thread):
     def change(self):
         """Change the parameters of a specific job """
 
-        with self.lock:
-            self.show_all()
-            idx = slowprint_with_input("Which id do you want to change? (-1) for none", parameters.print_delay)
-            idx = int(idx)
-            if idx == -1:
-                return
+        self.show_all()
 
-            job = self.job_list[idx]
+        with self.lock:
+            idx = slowprint_with_input("Which id do you want to change? (-1) for none", parameters.print_delay)
+
+            job=self.get_job(idx)
+            if job is None: return
+
             name = slowprint_with_input("Enter new name (empty unchanged)", parameters.print_delay)
             frequency = slowprint_with_input("Enter new frequency (empty unchanged)", parameters.print_delay)
             rep = slowprint_with_input("Enter new repetitions (empty unchanged)", parameters.print_delay)
 
-            job.change_vals(name, frequency, rep)
+            job['job'].change_vals(name, frequency, rep)
             print("New values changed")
 
     def show_all(self):
@@ -121,24 +138,24 @@ class WOD(threading.Thread):
             if len(self.job_list) == 0:
                 self.delayed_print("No job currently running")
             for idx in range(len(self.job_list)):
-                self.delayed_print(f"Id : {idx}\n{self.worker_classes[idx]['job'].summary()}\n")
+                self.delayed_print(f"Id : {idx}\n{self.job_list[idx]['job'].summary()}\n")
 
     def stop_specific(self):
         """Stop a given job"""
+
+        self.show_all()
+
         with self.lock:
 
-            self.show_all()
             idx = slowprint_with_input("Which id do you want to stop? (-1) for none", parameters.print_delay)
 
-            try:
-                idx = int(idx)
-                if idx == -1:
-                    return
+            job=self.get_job(idx)
 
-                self.job_list[idx]['stop'].set()
-                self.job_list[idx]['job'].start()
-            except IndexError or ValueError as e:
-                self.delayed_print(f"You just caused an error...\n{e}")
+            if job is None: return
+
+            self.job_list[idx]['stop'].set()
+            self.job_list[idx]['job'].start()
+
 
     def stop_all(self):
         """Stop every running job """
