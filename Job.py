@@ -7,12 +7,13 @@ from utils import time_print, play_sound, other_todo
 
 class Job(threading.Thread):
 
-    def __init__(self, name, freq, rep, stop):
+    def __init__(self, name, freq, rep):
         super().__init__()
         self.name = name
         self.freq = self.get_number(freq)
         self.rep = self.get_number(rep)
-        self.stop = stop
+        self.stop = threading.Event()
+
 
         self.start_time = time.time()
 
@@ -34,9 +35,15 @@ class Job(threading.Thread):
         if rep:
             self.rep = self.get_number(rep)
 
-    def get_number(self, string):
+    def get_number(self, str):
+
+        if isinstance(str, tuple):
+            if isinstance(str[0],int):
+                if isinstance(str[1],int):
+                    return str
+
         try:
-            l, u = string.split(",")
+            l, u = str.split(",")
             l = int(l)
             u = int(u)
         except Exception as e:

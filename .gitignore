@@ -10,3 +10,5 @@ venv/bin/
 venv/lib/python3\.5/site-packages/pip-10\.0\.1-py3\.5\.egg/EGG-INFO/
 
 venv/
+
+Resources/saved_jobs/

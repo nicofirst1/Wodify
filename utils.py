@@ -3,11 +3,11 @@ import os
 import random
 import sys
 import time
-
-from Parameters import Parameters
+import pickle
+from Parameters import Parameters, Paths
 
 parameters = Parameters()
-
+paths=Paths()
 
 def slowprint(msg, delay):
     for c in msg + '\n':
@@ -69,3 +69,16 @@ def other_todo(how_many, what):
     return str
 
 
+
+def dump_pkl(job):
+
+    file_path=os.path.join(paths.saved_jobs,job['name'])+".pkl"
+
+    with open(file_path,"wb") as file:
+        pickle.dump(job, file,pickle.HIGHEST_PROTOCOL)
+
+
+def load_pkl(file_path):
+
+    with open(file_path,"rb") as file:
+        return pickle.load(file)
