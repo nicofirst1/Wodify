@@ -1,17 +1,16 @@
 import re
-import threading
 import time
 
-from Job import Job
 from WOD import WOD
-from utils import slowprint_with_delay, play_sound, slow_print_input_ingore_enter
+from utils import slowprint_with_delay, play_sound, slow_print_input_ingore_enter, parameters
 
-TUTORIAL = True
+TUTORIAL = False
 
 
 def tutotrial():
-    print_delay = 0.05
-    final_delay = 1.25
+    print_delay = parameters.print_delay
+    final_delay = parameters.print_delay_sentence
+
     wod = WOD()
     slowprint_with_delay("", print_delay, final_delay)
 
@@ -27,8 +26,9 @@ def tutotrial():
     else:
         slowprint_with_delay("As if your opinion matters...", print_delay, final_delay)
 
-    slowprint_with_delay("First, you must know that I'll read your message when, and only when, you see the '>' symbol at the start of the sentence",
-                         print_delay, final_delay)
+    slowprint_with_delay(
+        "First, you must know that I'll read your message when, and only when, you see the '>' symbol at the start of the sentence",
+        print_delay, final_delay)
     slowprint_with_delay("If you don't see it press 'enter'", print_delay, final_delay + 0.5)
     slowprint_with_delay("Go on... press it", print_delay, final_delay + 1)
     slowprint_with_delay("Not working?\nThat's because it's the tutorial you dumb fat ass, focus", print_delay,
@@ -38,15 +38,14 @@ def tutotrial():
         final_delay)
     slowprint_with_delay("Try it (this time for real)", print_delay, final_delay)
 
-    h=slow_print_input_ingore_enter("",print_delay)
+    h = slow_print_input_ingore_enter("", print_delay)
 
-    if h.strip()!="h" and h.strip()!="help":
+    if h.strip() != "h" and h.strip() != "help":
         slowprint_with_delay("Oh no, I didn't know you were retarded...", print_delay, final_delay)
         slowprint_with_delay("I'm ...", print_delay, final_delay)
         slowprint_with_delay("I'm sorry about that", print_delay, final_delay)
         slowprint_with_delay("Here, let me help", print_delay, final_delay)
-        slowprint_with_delay("> h", print_delay+0.5, final_delay)
-
+        slowprint_with_delay("> h", print_delay + 0.5, final_delay)
 
     wod.help()
 
@@ -103,8 +102,8 @@ def tutotrial():
     else:
         slowprint_with_delay("Good job! I'll give you a banana when you're done with this", print_delay, final_delay)
 
-
-    slowprint_with_delay("So now the timer has started and it will soon go off (increase the speakers volume)", print_delay, final_delay)
+    slowprint_with_delay("So now the timer has started and it will soon go off (increase the speakers volume)",
+                         print_delay, final_delay)
     slowprint_with_delay("...", print_delay, final_delay)
 
     slowprint_with_delay(".....", print_delay, final_delay)
@@ -116,15 +115,17 @@ def tutotrial():
     slowprint_with_delay("Scared?", print_delay, final_delay)
     slowprint_with_delay("I bet you are, you little pussy.", print_delay, final_delay)
     slowprint_with_delay("Any this is it, at least for the basic stuff.", print_delay, final_delay)
-    slowprint_with_delay("If you're in doubt about something use 'help' or just look at the source code.", print_delay, final_delay)
+    slowprint_with_delay("If you're in doubt about something use 'help' or just look at the source code.", print_delay,
+                         final_delay)
     slowprint_with_delay("Oh yes, one last thing.", print_delay, final_delay)
-    slowprint_with_delay("I now you like me, and I like you too, but for your sanity I strongly advise you to turn the tutorial off for the next run.", print_delay, final_delay)
-    slowprint_with_delay("In the main.py file there is a big TUTORIAL variable you should set to false.", print_delay, final_delay)
+    slowprint_with_delay(
+        "I now you like me, and I like you too, but for your sanity I strongly advise you to turn the tutorial off for the next run.",
+        print_delay, final_delay)
+    slowprint_with_delay("In the main.py file there is a big TUTORIAL variable you should set to false.", print_delay,
+                         final_delay)
     slowprint_with_delay("Is up to you.", print_delay, final_delay)
     slowprint_with_delay("See you little bitch", print_delay, final_delay)
     slowprint_with_delay("<3\n", print_delay, final_delay)
-
-
 
 
 if TUTORIAL:
@@ -132,4 +133,3 @@ if TUTORIAL:
 
 wod = WOD()
 wod.start()
-
