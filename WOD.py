@@ -230,3 +230,8 @@ class WOD(threading.Thread):
 
         self.job_list.append(new_job)
         new_job.start()
+
+
+    def global_progress(self):
+        """Check out your global progresses"""
+        self.delayed_print(paths.get_progresses())

@@ -1,3 +1,6 @@
+import threading
+
+
 class Parameters:
 
 
@@ -32,8 +35,16 @@ class Paths:
 
         current_path=os.getcwd()
 
+        self.lock=threading.Lock()
+
         self.RESOURCES=os.path.join(current_path,"Resources")
         self.saved_jobs=os.path.join(self.RESOURCES,"saved_jobs")
+        self.progresses=os.path.join(self.RESOURCES,"progresses.txt")
+
+        try:
+            open( self.progresses, 'r')
+        except IOError:
+            open( self.progresses, 'w')
 
 
 
@@ -46,4 +57,20 @@ class Paths:
             os.makedirs(self.saved_jobs)
 
 
+    def save_progress(self, what, how_many):
+
+        with self.lock:
+
+            with open(self.progresses,"a+") as file:
+                to_write=f"{datetime.datetime.now()}:{what},{how_many}"
+                file.write(to_write)
+
+
+    def get_progresses(self):
+
+        with self.lock:
+            with open(self.progresses,"r+") as file:
+                lines=file.readlines()
+
+        return lines
 

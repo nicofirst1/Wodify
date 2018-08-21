@@ -2,7 +2,7 @@ import random
 import threading
 import time
 
-from utils import time_print, play_sound, other_todo
+from utils import time_print, play_sound, other_todo, paths
 
 
 class Job(threading.Thread):
@@ -63,6 +63,7 @@ class Job(threading.Thread):
                 random_rep = random.randint(self.rep[0], self.rep[1])
                 print(other_todo(random_rep,self.name))
                 play_sound()
+                paths.save_progress(self.name, random_rep)
                 self.total += random_rep
                 break
 
@@ -71,3 +72,4 @@ class Job(threading.Thread):
     def summary(self):
         to_print = f"Exercise : {self.name}\nFrequency : {self.freq}\nRepetitions : {self.rep}"
         return to_print
+
