@@ -12,7 +12,7 @@ def slowprint(msg, delay ):
 
 
 def slowprint_with_input(msg, delay ):
-    slowprint(msg, delay)
+    slowprint("\n"+msg, delay)
     return input("> ")
 
 

@@ -1,6 +1,9 @@
+import os
 import random
 import threading
 import time
+
+from utils import time_print
 
 
 class Job(threading.Thread):
@@ -12,12 +15,12 @@ class Job(threading.Thread):
         self.rep=self.get_number(rep)
         self.stop=stop
 
-        self.start=time.time()
+        self.start_time=time.time()
 
         self.total=0
 
     def progress(self):
-        to_print=f"You did {self.total} {self.name} in {time_print(time.time()-self.start)}"
+        to_print=f"You did {self.total} {self.name} in {time_print(time.time()-self.start_time)}"
         return to_print
 
     def change_vals(self, name, freq, rep):
