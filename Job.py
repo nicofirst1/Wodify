@@ -48,7 +48,7 @@ class Job(threading.Thread):
 
     def run(self):
 
-        print(f"Starting\n{self.summary()}")
+        print(f"Starting {self.name}\n")
 
         while not self.stop.is_set():
 
