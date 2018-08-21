@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 import sys
 import time
 
@@ -37,6 +38,8 @@ def slow_print_input_ingore_enter(msg, delay):
     return res
 
 
+
+
 def play_sound():
     """
     Play a sound
@@ -50,3 +53,19 @@ def play_sound():
 
     for i in range(repeat):
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
+
+
+def other_todo(how_many, what):
+
+    todo_list=[
+        "Come on fatty! Another %d %s to do!",
+        "More coming! %d %s",
+        "Let's try with %d %s",
+        "Tired yet? Go on with %d %s",
+        "You're never to tired for %d %s"
+    ]
+
+    str=random.choice(todo_list)%(how_many,what)
+    return str
+
+

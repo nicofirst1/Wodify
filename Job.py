@@ -2,7 +2,7 @@ import random
 import threading
 import time
 
-from utils import time_print, play_sound
+from utils import time_print, play_sound, other_todo
 
 
 class Job(threading.Thread):
@@ -54,8 +54,8 @@ class Job(threading.Thread):
             random_wait = random.randint(self.freq[0], self.freq[1]) * 60
             while not self.stop.wait(timeout=random_wait):
                 random_rep = random.randint(self.rep[0], self.rep[1])
+                print(other_todo(random_rep,self.name))
                 play_sound()
-                print(f"You must do {random_rep} {self.name}")
                 self.total += random_rep
                 break
 
