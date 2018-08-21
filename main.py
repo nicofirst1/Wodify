@@ -4,7 +4,7 @@ import time
 from WOD import WOD
 from utils import slowprint_with_delay, play_sound, slow_print_input_ingore_enter, parameters
 
-TUTORIAL = True
+TUTORIAL = False
 
 
 def tutotrial():
@@ -114,6 +114,7 @@ def tutotrial():
     play_sound()
     slowprint_with_delay("Scared?", print_delay, final_delay)
     slowprint_with_delay("I bet you are, you little pussy.", print_delay, final_delay)
+    slowprint_with_delay("Finally you can configure some parameters in the 'Parameters.py' if you want", print_delay, final_delay)
     slowprint_with_delay("Any this is it, at least for the basic stuff.", print_delay, final_delay)
     slowprint_with_delay("If you're in doubt about something use 'help' or just look at the source code.", print_delay,
                          final_delay)
