@@ -4,7 +4,7 @@ import time
 from WOD import WOD
 from utils import slowprint_with_delay, play_sound, slow_print_input_ingore_enter, parameters
 
-TUTORIAL = False
+TUTORIAL = True
 
 
 def tutotrial():
