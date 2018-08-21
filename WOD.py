@@ -19,7 +19,7 @@ class WOD(threading.Thread):
 
         super().__init__()
         self.worker_classes=[]
-        self.print_delay=0.02
+        self.print_delay=0
         self.final_delay=0.8
 
         self.cmd_actions = {
@@ -59,7 +59,7 @@ class WOD(threading.Thread):
             if len(self.worker_classes)==0:
                 self.delayed_print("No job currently running")
             for idx in range(len(self.worker_classes)):
-                self.delayed_print(f"Id : {idx}\n{self.worker_classes[idx]['ex'].summary()}\n")
+                self.delayed_print(f"Id : {idx}\n{self.worker_classes[idx]['job'].summary()}\n")
 
 
     def check_formatting(self, str):
@@ -74,7 +74,7 @@ class WOD(threading.Thread):
         """Add a job"""
         with self.lock:
 
-            input("Press enter to continue")
+            input("Press enter twice to continue")
             name = slowprint_with_input("What's the name of the exercise?", self.print_delay)
             frequency = slowprint_with_input("With what time frequency? (min,max)", self.print_delay)
             if not self.check_formatting(frequency):return
