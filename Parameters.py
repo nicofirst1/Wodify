@@ -9,7 +9,7 @@ class Parameters:
     print_delay = 0.02
 
     # the time to wait after starting a new sentence
-    print_delay_sentence = 1.25
+    print_delay_sentence = 1
 
     # the number of beeps
     beep_repetitions = 2
@@ -63,7 +63,7 @@ class Paths:
         with self.lock:
 
             with open(self.progresses,"a+") as file:
-                to_write=f"{datetime.datetime.now()}:{what},{how_many}"
+                to_write=f"{datetime.datetime.now()}:{what},{how_many}\n"
                 file.write(to_write)
 
 
