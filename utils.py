@@ -62,7 +62,7 @@ def other_todo(how_many, what):
         "More coming! %d %s",
         "Let's try with %d %s",
         "Tired yet? Go on with %d %s",
-        "You're never to tired for %d %s"
+        "You're never too tired for %d %s"
     ]
 
     str=random.choice(todo_list)%(how_many,what)
