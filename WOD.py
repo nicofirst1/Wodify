@@ -20,11 +20,10 @@ class WOD(threading.Thread):
 
         self.cmd_actions = {
             'add': self.add, 'show': self.show_all,
-            'change': self.change, 'stop all': self.stop_all,
-            'stop': self.stop_specific, 'h': self.help,
+            'change': self.change,'stop': self.stop_specific,
+            'h': self.help,
             'help': self.help, 'progress': self.progress,
-            'save': self.save_job, 'load':self.load_job,
-            'save all':self.save_all}
+            'save': self.save_job, 'load':self.load_job,}
 
         self.stop = False
         self.lock = threading.Lock()
@@ -118,8 +117,18 @@ class WOD(threading.Thread):
     def progress(self):
         """Print the progress you achieved in time"""
 
-        for job in self.job_list:
-            slowprint_with_delay(job.progress(), parameters.print_delay, parameters.print_delay_sentence)
+        with self.lock:
+            yn = slowprint_with_input("You can either choose 'global' or 'local' project...\nI won't tell you the difference", parameters.print_delay)
+
+            if yn=="global":
+                self.global_progress()
+
+            elif yn=="local":
+                for job in self.job_list:
+                    slowprint_with_delay(job.progress(), parameters.print_delay, parameters.print_delay_sentence)
+
+            else:
+                self.delayed_print("Not even this... you are such a useless human being")
 
     def change(self):
         """Change the parameters of a specific job """
@@ -154,7 +163,11 @@ class WOD(threading.Thread):
 
         with self.lock:
 
-            idx = slowprint_with_input("Which id do you want to stop? (-1) for none", parameters.print_delay)
+            idx = slowprint_with_input("Which id do you want to stop? You can type 'all' to stop them all or -1 for none", parameters.print_delay)
+
+            if idx=="all":
+                self.stop_all()
+                return
 
             job=self.get_indexed_elem(idx,self.job_list)
 
@@ -164,13 +177,21 @@ class WOD(threading.Thread):
             self.job_list[idx].start()
 
 
-    def stop_all(self):
-        """Stop every running job """
+    def start_all(self):
+        """Start every previously stopped exercise"""
 
         for job in self.job_list:
-            job.stop.set()
+            if job.stop.is_set():
+                job.stop.clear()
+                job.start()
 
-        # other actions
+    def stop_all(self):
+        """Start every previously stopped exercise"""
+
+        for job in self.job_list:
+            if not job.stop.is_set():
+                job.stop.set()
+
 
     def add(self):
         """Add a job"""
@@ -201,7 +222,11 @@ class WOD(threading.Thread):
 
         with self.lock:
 
-            idx = slowprint_with_input("Which id do you want to save? (-1) for none", parameters.print_delay)
+            idx = slowprint_with_input("Which id do you want to save?\nYou can type 'all' to save them all or -1 for none", parameters.print_delay)
+
+            if idx=="all":
+                self.save_all()
+                return
 
             job=self.get_indexed_elem(idx,self.job_list)
 
@@ -215,18 +240,10 @@ class WOD(threading.Thread):
     def save_all(self):
         """Save every exercise in the list"""
 
-        self.show_all()
-
-        with self.lock:
-            yn = slowprint_with_input("Are you sure you want to save them all? [y/n]", parameters.print_delay)
-
-            if yn=="n" or yn=="no":
-                return
-
-            for job in self.job_list:
-                to_dump = {'name': job.name, 'freq': job.freq, 'rep': job.rep}
-                dump_pkl(to_dump)
-                slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
+        for job in self.job_list:
+            to_dump = {'name': job.name, 'freq': job.freq, 'rep': job.rep}
+            dump_pkl(to_dump)
+            slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
 
     def load_job(self):
         """Load one or more exercises from the ones saved and starts it immediately"""
@@ -261,4 +278,6 @@ class WOD(threading.Thread):
 
     def global_progress(self):
         """Check out your global progresses"""
-        self.delayed_print(paths.get_progresses())
+
+        for elem in paths.get_progresses():
+            self.delayed_print(elem)
