@@ -23,7 +23,8 @@ class WOD(threading.Thread):
             'change': self.change, 'stop all': self.stop_all,
             'stop': self.stop_specific, 'h': self.help,
             'help': self.help, 'progress': self.progress,
-            'save': self.save_job, 'load':self.load_job,}
+            'save': self.save_job, 'load':self.load_job,
+            'save all':self.save_all}
 
         self.stop = False
         self.lock = threading.Lock()
@@ -211,8 +212,24 @@ class WOD(threading.Thread):
 
             slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
 
+    def save_all(self):
+        """Save every exercise in the list"""
+
+        self.show_all()
+
+        with self.lock:
+            yn = slowprint_with_input("Are you sure you want to save them all? [y/n]", parameters.print_delay)
+
+            if yn=="n" or yn=="no":
+                return
+
+            for job in self.job_list:
+                to_dump = {'name': job.name, 'freq': job.freq, 'rep': job.rep}
+                dump_pkl(to_dump)
+                slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
+
     def load_job(self):
-        """Load an exercise from the ones saved and starts it immediately"""
+        """Load one or more exercises from the ones saved and starts it immediately"""
 
 
         saved=paths.get_saved_jobs()
@@ -220,16 +237,26 @@ class WOD(threading.Thread):
         for idx in range(len(saved)):
             self.delayed_print(f"id {idx} : {saved[idx]}")
 
-        idx = slowprint_with_input("Which id do you want to load? (-1) for none", parameters.print_delay)
+        idx = slowprint_with_input("Which id do you want to load?\nYou can either choose one or multiple (0,1,2...).\nUse -1 for none.", parameters.print_delay)
 
+        if "," in idx:
+            for elem in idx.split(","):
 
-        to_load = self.get_indexed_elem(idx, saved)
-        job=load_pkl(os.path.join(paths.saved_jobs,to_load))
+                to_load = self.get_indexed_elem(elem, saved)
+                job=load_pkl(os.path.join(paths.saved_jobs,to_load))
 
-        new_job=Job(job['name'],job['freq'],job['rep'])
+                new_job=Job(job['name'],job['freq'],job['rep'])
 
-        self.job_list.append(new_job)
-        new_job.start()
+                self.job_list.append(new_job)
+                new_job.start()
+        else:
+            to_load = self.get_indexed_elem(idx, saved)
+            job = load_pkl(os.path.join(paths.saved_jobs, to_load))
+
+            new_job = Job(job['name'], job['freq'], job['rep'])
+
+            self.job_list.append(new_job)
+            new_job.start()
 
 
     def global_progress(self):
