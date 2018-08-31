@@ -12,11 +12,17 @@ class Parameters:
     print_delay_sentence = 1
 
     # the number of beeps
-    beep_repetitions = 2
+    beep_repetitions = 1
     # the duration of a single beep in seconds
     beep_duration = 1
     # the frequency of a beep
-    beep_frequency = 400
+    beep_frequency = 600
+
+    #What OS are you using?
+    # U -> ubuntu
+    # W -> windows
+    # M -> macOS
+    OS="U"
 
     def __init__(self):
         a = 1

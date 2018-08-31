@@ -2,7 +2,7 @@ import random
 import threading
 import time
 
-from utils import time_print, play_sound, other_todo, paths
+from utils import time_print, ubuntu_beep, other_todo, paths, parameters, windows_beep
 
 
 class Job(threading.Thread):
@@ -14,13 +14,12 @@ class Job(threading.Thread):
         self.rep = self.get_number(rep)
         self.stop = threading.Event()
 
-
         self.start_time = time.time()
 
         self.total = 0
 
     def progress(self):
-        to_print = f"You did {self.total} {self.name} in {time_print(time.time()-self.start_time)}"
+        to_print = f"{self.total} {self.name} in {time_print(time.time()-self.start_time)}"
         return to_print
 
 
@@ -62,7 +61,19 @@ class Job(threading.Thread):
             while not self.stop.wait(timeout=random_wait):
                 random_rep = random.randint(self.rep[0], self.rep[1])
                 print(other_todo(random_rep,self.name))
-                play_sound()
+
+                if parameters.OS=="U":
+                    ubuntu_beep()
+
+                elif parameters.OS=="W":
+                    windows_beep()
+
+                elif parameters.OS=="M":
+                    print("beep")
+
+                else:
+                    raise Exception(f"What the fuck is {parameters.OS} OS?")
+
                 paths.save_progress(self.name, random_rep)
                 self.total += random_rep
                 break

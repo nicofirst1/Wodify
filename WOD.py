@@ -124,8 +124,9 @@ class WOD(threading.Thread):
                 self.global_progress()
 
             elif yn=="local":
+                self.delayed_print("During this run you did:")
                 for job in self.job_list:
-                    slowprint_with_delay(job.progress(), parameters.print_delay, parameters.print_delay_sentence)
+                    self.delayed_print(job.progress())
 
             else:
                 self.delayed_print("Not even this... you are such a useless human being")

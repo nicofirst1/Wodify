@@ -2,7 +2,7 @@ import re
 import time
 
 from WOD import WOD
-from utils import slowprint_with_delay, play_sound, slow_print_input_ingore_enter, parameters
+from utils import slowprint_with_delay, ubuntu_beep, slow_print_input_ingore_enter, parameters
 
 TUTORIAL = False
 
@@ -111,7 +111,7 @@ def tutotrial():
     slowprint_with_delay("........", print_delay, final_delay)
     slowprint_with_delay("Never mind, let's speed up time", print_delay, final_delay)
     slowprint_with_delay(f"You must do {rep} {name}", print_delay, final_delay)
-    play_sound()
+    ubuntu_beep()
     slowprint_with_delay("Scared?", print_delay, final_delay)
     slowprint_with_delay("I bet you are, you little pussy.", print_delay, final_delay)
     slowprint_with_delay("Finally you can configure some parameters in the 'Parameters.py' if you want", print_delay, final_delay)

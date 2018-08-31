@@ -40,7 +40,7 @@ def slow_print_input_ingore_enter(msg, delay):
 
 
 
-def play_sound():
+def ubuntu_beep():
     """
     Play a sound
     :param duration: duration in seconds
@@ -54,6 +54,16 @@ def play_sound():
     for i in range(repeat):
         os.system('play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq))
 
+
+
+def windows_beep():
+    import winsound
+    frequency = parameters.beep_frequency  # Set Frequency To 2500 Hertz
+    duration = parameters.beep_duration*1000  # Set Duration To 1000 ms == 1 second
+    repeat = parameters.beep_repetitions
+
+    for i in range(repeat):
+        winsound.Beep(frequency, duration)
 
 def other_todo(how_many, what):
 
