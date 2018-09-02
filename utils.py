@@ -92,3 +92,18 @@ def load_pkl(file_path):
 
     with open(file_path,"rb") as file:
         return pickle.load(file)
+
+
+def count_how_may(job_list):
+
+    jobs=[elem[0] for elem in job_list]
+    jobs=set(jobs)
+
+    res_dict={}
+
+    for j in jobs:
+
+        quantity=sum([int(elem[1].strip("\n")) for elem in job_list if elem [0]==j])
+        res_dict[j]=quantity
+
+    return res_dict

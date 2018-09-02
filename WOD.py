@@ -2,9 +2,11 @@ import os
 import queue
 import re
 import threading
+import datetime
 
 from Job import Job
-from utils import slowprint, slowprint_with_input, slowprint_with_delay, parameters, dump_pkl, paths, load_pkl
+from utils import slowprint, slowprint_with_input, slowprint_with_delay, parameters, dump_pkl, paths, load_pkl, \
+    count_how_may
 
 format_re = re.compile("\d+,\d+")
 
@@ -280,5 +282,20 @@ class WOD(threading.Thread):
     def global_progress(self):
         """Check out your global progresses"""
 
+        today=[]
+
         for elem in paths.get_progresses():
-            self.delayed_print(elem)
+            date=elem.rsplit(":",1)[0].split()[0].split("-")
+            y=int(date[0])
+            m=int(date[1])
+            d=int(date[2])
+            date=datetime.datetime(y,m,d)
+            if date.date() != datetime.datetime.today().date():
+                continue
+            what=elem.rsplit(":",1)[1].split(",")
+            today.append(what)
+
+        results=count_how_may(today)
+
+        for k,v in results.items():
+            self.delayed_print(f"You did {v} {k} today!")
