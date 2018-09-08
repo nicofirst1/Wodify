@@ -139,17 +139,25 @@ class WOD(threading.Thread):
         self.show_all()
 
         with self.lock:
-            idx = slowprint_with_input("Which id do you want to change? (-1) for none", parameters.print_delay)
+            idx = slowprint_with_input("Which id do you want to change?\nYou can either choose one or multiple (0,1,2...).\nUse -1 for none.", parameters.print_delay)
 
-            job=self.get_indexed_elem(idx,self.job_list)
-            if job is None: return
+            jobs=[]
+            if "," in idx:
+                for elem in idx.split(","):
+                    to_change = self.get_indexed_elem(elem, self.job_list)
+                    jobs.append(to_change)
+            else:
+                to_change=self.get_indexed_elem(idx,self.job_list)
+                if to_change is None: return
+                jobs.append(to_change)
 
-            name = slowprint_with_input("Enter new name (empty unchanged)", parameters.print_delay)
-            frequency = slowprint_with_input("Enter new frequency (empty unchanged)", parameters.print_delay)
-            rep = slowprint_with_input("Enter new repetitions (empty unchanged)", parameters.print_delay)
-
-            job.change_vals(name, frequency, rep)
-            print("New values changed")
+            self.delayed_print("You can leave the current value by pressing 'Enter")
+            for job in jobs:
+                name = slowprint_with_input(f"Enter new name (currently {job.name})", parameters.print_delay)
+                frequency = slowprint_with_input(f"Enter new frequency (currently {job.freq})", parameters.print_delay)
+                rep = slowprint_with_input(f"Enter new repetitions (currently {job.rep})", parameters.print_delay)
+                job.change_vals(name, frequency, rep)
+                print("New values changed")
 
     def show_all(self):
         """Show all jobs (running or not)"""
