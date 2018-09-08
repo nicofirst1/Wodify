@@ -4,7 +4,6 @@ import time
 from WOD import WOD
 from utils import slowprint_with_delay, ubuntu_beep, slow_print_input_ingore_enter, parameters
 
-TUTORIAL = False
 
 
 def tutotrial():
@@ -129,7 +128,7 @@ def tutotrial():
     slowprint_with_delay("<3\n", print_delay, final_delay)
 
 
-if TUTORIAL:
+if parameters.TUTORIAL:
     tutotrial()
 
 wod = WOD()

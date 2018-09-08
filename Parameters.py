@@ -4,12 +4,14 @@ import threading
 
 class Parameters:
 
+    # tutorial
+    TUTORIAL = False
 
     # the slowness of the print time
     print_delay = 0.02
 
     # the time to wait after starting a new sentence
-    print_delay_sentence = 1
+    print_delay_sentence = 0.1
 
     # the number of beeps
     beep_repetitions = 1
@@ -22,7 +24,7 @@ class Parameters:
     # U -> ubuntu
     # W -> windows
     # M -> macOS
-    OS="U"
+    OS="M"
 
     def __init__(self):
         a = 1
