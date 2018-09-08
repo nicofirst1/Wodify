@@ -1,6 +1,6 @@
 # Intro
 
-If you find yourself staring at a computer for most of your time you frobably have to do some workout.
+If you find yourself staring at a computer for most of your time you probably have to do some workout.
 
 And here is where I come to help!
 
@@ -12,6 +12,9 @@ And I'll show you how to work that ass.
 
 # Infos
 
-I work only for Linux masterrace (expecially for the sound stuff)
+- To have the beep sound on Mac, open terminal and type
+'sudo port install sox'
 
-I may soon evolve to serve other inferior OS too. 
+- Set the TUTORIAL flag to 'true' in the Parameters class to start the tutorial
+
+- Change settings in the Parameter class
