@@ -62,14 +62,11 @@ class Job(threading.Thread):
                 random_rep = random.randint(self.rep[0], self.rep[1])
                 print(other_todo(random_rep,self.name))
 
-                if parameters.OS=="U":
+                if parameters.OS=="U" or parameters.OS=="M":
                     ubuntu_beep()
 
                 elif parameters.OS=="W":
                     windows_beep()
-
-                elif parameters.OS=="M":
-                    print("beep")
 
                 else:
                     raise Exception(f"What the fuck is {parameters.OS} OS?")
