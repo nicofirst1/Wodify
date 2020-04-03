@@ -34,10 +34,11 @@ class Job(threading.Thread):
 
     def get_number(self, obj):
 
-        if isinstance(obj, tuple):
+        if isinstance(obj, tuple) or isinstance(obj,list) :
             if isinstance(obj[0], int):
                 if isinstance(obj[1], int):
                     return obj
+
 
         try:
             l, u = obj.split(",")
