@@ -19,10 +19,8 @@ class Job(threading.Thread):
         self.total = 0
 
     def progress(self):
-        to_print = f"{self.total} {self.name} in {time_print(time.time()-self.start_time)}"
+        to_print = f"{self.total} {self.name} in {time_print(time.time() - self.start_time)}"
         return to_print
-
-
 
     def change_vals(self, name, freq, rep):
         if name:
@@ -34,15 +32,15 @@ class Job(threading.Thread):
         if rep:
             self.rep = self.get_number(rep)
 
-    def get_number(self, str):
+    def get_number(self, obj):
 
-        if isinstance(str, tuple):
-            if isinstance(str[0],int):
-                if isinstance(str[1],int):
-                    return str
+        if isinstance(obj, tuple):
+            if isinstance(obj[0], int):
+                if isinstance(obj[1], int):
+                    return obj
 
         try:
-            l, u = str.split(",")
+            l, u = obj.split(",")
             l = int(l)
             u = int(u)
         except Exception as e:
@@ -55,22 +53,35 @@ class Job(threading.Thread):
 
         print(f"Starting {self.name}\n")
 
+        # sleep before actually starting the process
+        random_wait = random.randint(0, self.freq[0]) * 60
+        time.sleep(random_wait)
+
+        # while the stop timer is not set
         while not self.stop.is_set():
 
+            # define a random wait time
             random_wait = random.randint(self.freq[0], self.freq[1]) * 60
-            while not self.stop.wait(timeout=random_wait):
-                random_rep = random.randint(self.rep[0], self.rep[1])
-                print(other_todo(random_rep,self.name))
 
-                if parameters.OS=="U" or parameters.OS=="M":
+            # wait
+            while not self.stop.wait(timeout=random_wait):
+
+                # define random repetitions
+                random_rep = random.randint(self.rep[0], self.rep[1])
+                # print it
+                print(other_todo(random_rep, self.name))
+
+                # beep
+                if parameters.OS == "U" or parameters.OS == "M":
                     ubuntu_beep()
 
-                elif parameters.OS=="W":
+                elif parameters.OS == "W":
                     windows_beep()
 
                 else:
                     raise Exception(f"What the fuck is {parameters.OS} OS?")
 
+                # save progress
                 paths.save_progress(self.name, random_rep)
                 self.total += random_rep
                 break
@@ -80,4 +91,3 @@ class Job(threading.Thread):
     def summary(self):
         to_print = f"Exercise : {self.name}\nFrequency : {self.freq}\nRepetitions : {self.rep}"
         return to_print
-

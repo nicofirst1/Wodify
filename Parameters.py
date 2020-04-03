@@ -1,17 +1,15 @@
-import datetime
-import threading
+import sys
 
 
 class Parameters:
-
     # tutorial
     TUTORIAL = False
 
     # the slowness of the print time
-    print_delay = 0.02
+    print_delay = 0
 
     # the time to wait after starting a new sentence
-    print_delay_sentence = 0.1
+    print_delay_sentence = 0
 
     # the number of beeps
     beep_repetitions = 1
@@ -20,66 +18,16 @@ class Parameters:
     # the frequency of a beep
     beep_frequency = 600
 
-    #What OS are you using?
+    platform = sys.platform
+
+    # What OS are you using?
     # U -> ubuntu
     # W -> windows
     # M -> macOS
-    OS="M"
 
-    def __init__(self):
-        a = 1
-
-
-
-
-
-
-import os
-
-class Paths:
-
-
-
-    def __init__(self):
-
-        current_path=os.getcwd()
-
-        self.lock=threading.Lock()
-
-        self.RESOURCES=os.path.join(current_path,"Resources")
-        self.saved_jobs=os.path.join(self.RESOURCES,"saved_jobs")
-        self.progresses=os.path.join(self.RESOURCES,"progresses.txt")
-
-        try:
-            open( self.progresses, 'r')
-        except IOError:
-            open( self.progresses, 'w')
-
-
-
-    def get_saved_jobs(self):
-        onlyfiles = [f for f in os.listdir(self.saved_jobs) if os.path.isfile(os.path.join(self.saved_jobs, f))]
-        return onlyfiles
-
-    def generate_res_dirs(self):
-        if not os.path.exists(self.saved_jobs):
-            os.makedirs(self.saved_jobs)
-
-
-    def save_progress(self, what, how_many):
-
-        with self.lock:
-
-            with open(self.progresses,"a+") as file:
-                to_write=f"{datetime.datetime.now()}:{what},{how_many}\n"
-                file.write(to_write)
-
-
-    def get_progresses(self):
-
-        with self.lock:
-            with open(self.progresses,"r+") as file:
-                lines=file.readlines()
-
-        return lines
-
+    if platform == "darwmin":
+        OS = "M"
+    elif platform == "win32":
+        OS = "W"
+    else:
+        OS = "U"
