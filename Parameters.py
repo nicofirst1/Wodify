@@ -3,7 +3,7 @@ import sys
 
 class Parameters:
     # tutorial
-    TUTORIAL = False
+    TUTORIAL = True
 
     # the slowness of the print time
     print_delay = 0

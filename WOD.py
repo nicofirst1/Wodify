@@ -12,12 +12,16 @@ format_re = re.compile("\d+,\d+")
 
 
 class WOD(threading.Thread):
+    """
+    Main class managing different jobs and console input
+    """
 
     def __init__(self):
 
         super().__init__()
         self.job_list = []
 
+        # implemented commands
         self.cmd_actions = {
             'add': self.add, 'show': self.show_all,
             'change': self.change, 'stop': self.stop_specific,
@@ -34,31 +38,34 @@ class WOD(threading.Thread):
     ##############################
 
     def run(self):
+        """
+        Run the main program
+        :return:
+        """
 
-        self.delayed_print("Program started... press 'enter'")
+        self.delayed_print("Program started... press 'help' to view commands")
 
-        # dj = threading.Thread(target=self.console)
-        # dj.start()
-
+        # while not stopped
         while not self.stop:
-            with self.lock:
-                cmd = input('> ')
-            if cmd == 'quit':
-                break
-            action = self.cmd_actions.get(cmd, self.invalid_input)
-            action()
 
-    def console(self):
-        while 1:
+            # ask for lock and get input
             with self.lock:
                 cmd = input('> ')
 
-            self.queue.put(cmd)
+            # if command is quit then break
             if cmd == 'quit':
                 self.delayed_print("bie bie")
                 break
+            # check action and execute
+            action = self.cmd_actions.get(cmd, self.invalid_input)
+            action()
+
 
     def invalid_input(self):
+        """
+        invalid input action
+        :return:
+        """
         with self.lock:
             to_print = "Unknown command\n" \
                        "Type 'h' for help"
@@ -67,7 +74,15 @@ class WOD(threading.Thread):
     ##############################
     #           UTILS
     ##############################
+
     def delayed_print(self, msg, print_delay=0, final_delay=0):
+        """
+        Delayed print to make things look cool
+        :param msg: str, msg to be printed
+        :param print_delay: float, delay when printing
+        :param final_delay: float, delay after printing
+        :return:
+        """
 
         if not final_delay:
             final_delay = parameters.print_delay_sentence
@@ -76,26 +91,37 @@ class WOD(threading.Thread):
 
         slowprint_with_delay(msg, print_delay, final_delay)
 
-    def check_formatting(self, str):
+    def check_formatting(self, user_input):
+        """
+        Check for input format correctness
+        :param user_input: str, the input
+        :return: bool
+        """
 
-        if re.fullmatch(format_re, str) is None:
-            self.delayed_print("Invalid formatting dumbass")
+        if re.fullmatch(format_re, user_input) is None:
+            self.delayed_print("Invalid formatting dumbass, canceling...")
             return False
 
         return True
 
-    def get_indexed_elem(self, idx, list):
+    def get_indexed_elem(self, idx, jobs):
+        """
+        Return the index of an element
+        :param idx: str, user input for the wanted idx
+        :param jobs: list, list of jobs
+        :return: None if something went wrong, or a job
+        """
         try:
             idx = int(idx)
-        except ValueError as e:
+        except ValueError:
             self.delayed_print("That's not a number, silly tuna")
             return None
 
         if idx == -1:
             return None
         try:
-            job = list[idx]
-        except IndexError as e:
+            job = jobs[idx]
+        except IndexError:
             self.delayed_print("Did you hit your head when you were little?")
             return None
 
@@ -109,6 +135,7 @@ class WOD(threading.Thread):
         """Print this help screen"""
 
         with self.lock:
+            # for every command
             for k, v in self.cmd_actions.items():
                 slowprint(f"-{k} : {v.__doc__}", parameters.print_delay)
 
@@ -117,7 +144,7 @@ class WOD(threading.Thread):
 
         with self.lock:
             yn = slowprint_with_input(
-                "You can either choose 'global' or 'local' project...\nI won't tell you the difference",
+                "You can either choose 'global' (since you started the app) or 'local' (for today) project...",
                 parameters.print_delay)
 
             if yn == "global":
@@ -129,11 +156,12 @@ class WOD(threading.Thread):
                     self.delayed_print(job.progress())
 
             else:
-                self.delayed_print("Not even this... you are such a useless human being")
+                self.delayed_print("You didn't type either... How can you live like this?")
 
     def change(self):
         """Change the parameters of a specific job """
 
+        # print all jobs
         self.show_all()
 
         with self.lock:
@@ -142,16 +170,21 @@ class WOD(threading.Thread):
                 parameters.print_delay)
 
             jobs = []
+            # if there are multiple jobs to change
             if "," in idx:
                 for elem in idx.split(","):
                     to_change = self.get_indexed_elem(elem, self.job_list)
+
+                    if to_change is None: continue
+
                     jobs.append(to_change)
             else:
                 to_change = self.get_indexed_elem(idx, self.job_list)
                 if to_change is None: return
-                jobs.append(to_change)
+
 
             self.delayed_print("You can leave the current value by pressing 'Enter")
+            # for every job that needs to be changed
             for job in jobs:
                 name = slowprint_with_input(f"Enter new name (currently {job.name})", parameters.print_delay)
                 frequency = slowprint_with_input(f"Enter new frequency (currently {job.freq})", parameters.print_delay)
@@ -186,8 +219,8 @@ class WOD(threading.Thread):
 
             if job is None: return
 
-            self.job_list[idx].stop.set()
-            self.job_list[idx].start()
+            job.stop.set()
+            self.job_list.remove(job)
 
     def start_all(self):
         """Start every previously stopped exercise"""
@@ -280,6 +313,8 @@ class WOD(threading.Thread):
                 new_job.start()
         else:
             to_load = self.get_indexed_elem(idx, saved)
+            if to_load is None:
+                return
             job = load_json(os.path.join(paths.saved_jobs, to_load))
 
             new_job = Job(job['name'], job['freq'], job['rep'])

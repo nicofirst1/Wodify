@@ -1,5 +1,6 @@
 import re
 import time
+import random
 
 from WOD import WOD
 from utils import slowprint_with_delay, ubuntu_beep, slow_print_input_ingore_enter, parameters
@@ -28,18 +29,15 @@ def tutotrial():
         "First, you must know that I'll read your message when, and only when, you see the '>' symbol at the start of the sentence",
         print_delay, final_delay)
     slowprint_with_delay("If you don't see it press 'enter'", print_delay, final_delay + 0.5)
-    slowprint_with_delay("Go on... press it", print_delay, final_delay + 1)
-    slowprint_with_delay("Not working?\nThat's because it's the tutorial you dumb fat ass, focus", print_delay,
-                         final_delay)
     slowprint_with_delay(
-        "Anyhow, there are various commands you can use, first of all 'h' or 'help' for helpful infos", print_delay,
+        "There are various commands you can use, first of all 'h' or 'help' for helpful infos", print_delay,
         final_delay)
-    slowprint_with_delay("Try it (this time for real)", print_delay, final_delay)
+    slowprint_with_delay("Try it", print_delay, final_delay)
 
     h = slow_print_input_ingore_enter("", print_delay)
 
     if h.strip() != "h" and h.strip() != "help":
-        slowprint_with_delay("Oh no, I didn't know you were retarded...", print_delay, final_delay)
+        slowprint_with_delay("Oh no, I didn't know you were stupid...", print_delay, final_delay)
         slowprint_with_delay("I'm ...", print_delay, final_delay)
         slowprint_with_delay("I'm sorry about that", print_delay, final_delay)
         slowprint_with_delay("Here, let me help", print_delay, final_delay)
@@ -53,24 +51,23 @@ def tutotrial():
     name = slow_print_input_ingore_enter("Try something like 'pushups'", print_delay)
 
     if name.lower() != "pushups":
-        slowprint_with_delay(f"We have a smart ass here...\nFine '{name} will be", print_delay, final_delay)
+        slowprint_with_delay(f"We have a smart ass here...\nFine '{name}' will be", print_delay, final_delay)
     else:
         slowprint_with_delay("Good job", print_delay, final_delay)
 
     slowprint_with_delay("Now we need a time frequency\nThis will be the range (in minutes) for the random timer.\n"
-                         "Every time a new random value in range wll be estimated and you will be reminded to do your exercises\n"
+                         "Every time a new random value in range will be estimated and you will be reminded to do your exercises\n"
                          "Be careful to respect the formatting, I'm a lazy program... I don't want to try/catch everything you throw at me.\n"
                          "Remeber the format is always:\n"
                          "min,max", print_delay, final_delay + 1)
-    freq = slow_print_input_ingore_enter("Now insert the time frequency", print_delay)
+    freq = slow_print_input_ingore_enter("Now insert the time frequency (something like 5,10)", print_delay)
 
     format_re = re.compile("\d+,\d+")
 
     if re.fullmatch(format_re, freq) is None:
         slowprint_with_delay(
             "Seriously?\nYou know what, I just put you in an while loop...\nYou can do whatever you want here,"
-            " be as stupid as you want.\nThe only thing that changes is the time you loose.\nAh...right... "
-            "your time is as worthless as you...\n",
+            " be as stupid as you want.\nThe only thing that changes is the time you loose.\n",
             print_delay, final_delay)
         slowness = 0.1
         while re.fullmatch(format_re, freq) is None:
@@ -82,7 +79,7 @@ def tutotrial():
                              final_delay)
 
     rep = slow_print_input_ingore_enter(
-        f"Now do the same for the number of repetitions. This wll be the number of time you do {name}", print_delay)
+        f"Now do the same for the number of repetitions. This will be the range of repetitions for your {name}", print_delay)
 
     if re.fullmatch(format_re, rep) is None:
         slowprint_with_delay("...\nYou know what\nEnjoy the count down", print_delay, final_delay)
@@ -108,11 +105,11 @@ def tutotrial():
 
     slowprint_with_delay("........", print_delay, final_delay)
     slowprint_with_delay("Never mind, let's speed up time", print_delay, final_delay)
-    slowprint_with_delay(f"You must do {rep} {name}", print_delay, final_delay)
+    rep=rep.split(",")
+    r=random.randint(int(rep[0]), int(rep[1]))
+    slowprint_with_delay(f"You must do {r} {name}", print_delay, final_delay)
     ubuntu_beep()
-    slowprint_with_delay("Scared?", print_delay, final_delay)
-    slowprint_with_delay("I bet you are, you little pussy.", print_delay, final_delay)
-    slowprint_with_delay("Finally you can configure some parameters in the 'Parameters.py' if you want", print_delay,
+    slowprint_with_delay("\nFinally you can configure some parameters in the 'Parameters.py' if you want", print_delay,
                          final_delay)
     slowprint_with_delay("Any this is it, at least for the basic stuff.", print_delay, final_delay)
     slowprint_with_delay("If you're in doubt about something use 'help' or just look at the source code.", print_delay,
