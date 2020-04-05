@@ -6,10 +6,10 @@ class Parameters:
     TUTORIAL = True
 
     # the slowness of the print time
-    print_delay = 0
+    print_delay = 0.02
 
     # the time to wait after starting a new sentence
-    print_delay_sentence = 0
+    print_delay_sentence = 0.2
 
     # the number of beeps
     beep_repetitions = 1
