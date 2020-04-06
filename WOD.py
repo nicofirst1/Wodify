@@ -60,7 +60,6 @@ class WOD(threading.Thread):
             action = self.cmd_actions.get(cmd, self.invalid_input)
             action()
 
-
     def invalid_input(self):
         """
         invalid input action
@@ -182,7 +181,6 @@ class WOD(threading.Thread):
                 to_change = self.get_indexed_elem(idx, self.job_list)
                 if to_change is None: return
 
-
             self.delayed_print("You can leave the current value by pressing 'Enter")
             # for every job that needs to be changed
             for job in jobs:
@@ -254,6 +252,10 @@ class WOD(threading.Thread):
                 self.delayed_print("Too bad...")
                 return
 
+            # save new workout
+            to_dump = {'name': name, 'freq': frequency, 'rep': rep}
+            dump_json(to_dump)
+
             job = Job(name, frequency, rep)
             job.start()
             self.job_list.append(job)
@@ -299,10 +301,19 @@ class WOD(threading.Thread):
             self.delayed_print(f"id {idx} : {saved[idx]}")
 
         idx = slowprint_with_input(
-            "Which id do you want to load?\nYou can either choose one or multiple (0,1,2...).\nUse -1 for none.",
+            "Which id do you want to load?\nYou can either choose one or multiple (0,1,2...).\nUse -1 for none and 'all' to load everything.",
             parameters.print_delay)
 
-        if "," in idx:
+        if idx == "all":
+            for j in saved:
+                job = load_json(os.path.join(paths.saved_jobs, j))
+
+                new_job = Job(job['name'], job['freq'], job['rep'])
+
+                self.job_list.append(new_job)
+                new_job.start()
+
+        elif "," in idx:
             for elem in idx.split(","):
                 to_load = self.get_indexed_elem(elem, saved)
                 job = load_json(os.path.join(paths.saved_jobs, to_load))
