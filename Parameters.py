@@ -3,13 +3,13 @@ import sys
 
 class Parameters:
     # tutorial
-    TUTORIAL = True
+    TUTORIAL = False
 
     # the slowness of the print time
-    print_delay = 0.02
+    print_delay = 0.0
 
     # the time to wait after starting a new sentence
-    print_delay_sentence = 0.2
+    print_delay_sentence = 0.0
 
     # the number of beeps
     beep_repetitions = 1

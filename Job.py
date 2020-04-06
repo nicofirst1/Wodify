@@ -1,8 +1,9 @@
+import os
 import random
 import threading
 import time
 
-from utils import time_print, ubuntu_beep, other_todo, paths, parameters, windows_beep
+from utils import time_print, ubuntu_beep, other_todo, Path_class, parameters, windows_beep, load_json
 
 
 class Job(threading.Thread):
@@ -83,7 +84,7 @@ class Job(threading.Thread):
                     raise Exception(f"What the fuck is {parameters.OS} OS?")
 
                 # save progress
-                paths.save_progress(self.name, random_rep)
+                Path_class.save_progress(self.name, random_rep)
                 self.total += random_rep
                 break
 
@@ -92,3 +93,7 @@ class Job(threading.Thread):
     def summary(self):
         to_print = f"Exercise : {self.name}\nFrequency : {self.freq}\nRepetitions : {self.rep}"
         return to_print
+
+def load_json_job(job_path):
+    job = load_json(job_path)
+    return Job(job['name'], job['freq'], job['rep'])

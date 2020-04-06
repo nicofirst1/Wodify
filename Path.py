@@ -16,6 +16,7 @@ class Paths:
 
         self.RESOURCES = join(current_path, "Resources")
         self.saved_jobs = join(self.RESOURCES, "saved_jobs")
+        self.saved_groups = join(self.RESOURCES, "saved_groups")
         self.progresses = join(self.RESOURCES, "progresses.txt")
 
         # make resources dir if it does not exists
@@ -26,6 +27,10 @@ class Paths:
         if not os.path.exists(self.saved_jobs):
             os.makedirs(self.saved_jobs)
 
+        # same thing with saved jobs
+        if not os.path.exists(self.saved_groups):
+            os.makedirs(self.saved_groups)
+
         # same with progresses
         if not os.path.exists(self.progresses):
             f = open(self.progresses, 'w')
@@ -33,7 +38,15 @@ class Paths:
 
     def get_saved_jobs(self):
         onlyfiles = [f for f in os.listdir(self.saved_jobs) if os.path.isfile(join(self.saved_jobs, f))]
-        return onlyfiles
+        paths=[join(self.saved_jobs, f) for f in os.listdir(self.saved_jobs) if os.path.isfile(join(self.saved_jobs, f))]
+
+        return onlyfiles, paths
+
+
+    def get_saved_groups(self):
+        onlyfiles = [f for f in os.listdir(self.saved_groups) if os.path.isfile(join(self.saved_groups, f))]
+        paths=[join(self.saved_groups, f) for f in os.listdir(self.saved_groups) if os.path.isfile(join(self.saved_groups, f))]
+        return onlyfiles,paths
 
     def generate_res_dirs(self):
         if not os.path.exists(self.saved_jobs):

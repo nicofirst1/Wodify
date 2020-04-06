@@ -1,12 +1,12 @@
 import datetime
-import os
 import queue
 import re
 import threading
 
-from Job import Job
-from utils import slowprint, slowprint_with_input, slowprint_with_delay, parameters, paths, load_json, \
-    count_how_may, dump_json
+from Group import Group, load_json_group
+from Job import Job, load_json_job
+from utils import slowprint, slowprint_with_input, slowprint_with_delay, parameters, Path_class, \
+    count_how_may, dump_json_job
 
 format_re = re.compile("\d+,\d+")
 
@@ -27,7 +27,8 @@ class WOD(threading.Thread):
             'change': self.change, 'stop': self.stop_specific,
             'h': self.help,
             'help': self.help, 'progress': self.progress,
-            'save': self.save_job, 'load': self.load_job, }
+            'save': self.save_job, 'load': self.load_job,
+            'addg': self.create_group, 'rung': self.run_group,}
 
         self.stop = False
         self.lock = threading.Lock()
@@ -143,7 +144,7 @@ class WOD(threading.Thread):
 
         with self.lock:
             yn = slowprint_with_input(
-                "You can either choose 'global' (since you started the app) or 'local' (for today) project...",
+                "You can either choose 'global' (for today) or 'local' (for this run).",
                 parameters.print_delay)
 
             if yn == "global":
@@ -254,7 +255,7 @@ class WOD(threading.Thread):
 
             # save new workout
             to_dump = {'name': name, 'freq': frequency, 'rep': rep}
-            dump_json(to_dump)
+            dump_json_job(to_dump)
 
             job = Job(name, frequency, rep)
             job.start()
@@ -268,11 +269,14 @@ class WOD(threading.Thread):
         with self.lock:
 
             idx = slowprint_with_input(
-                "Which id do you want to save?\nYou can type 'all' to save them all or -1 for none",
+                "Which id do you want to save?\nYou can type 'all' to save them all or 'none' for none",
                 parameters.print_delay)
 
             if idx == "all":
                 self.save_all()
+                return
+
+            if idx == "none":
                 return
 
             job = self.get_indexed_elem(idx, self.job_list)
@@ -280,7 +284,7 @@ class WOD(threading.Thread):
             if job is None: return
 
             to_dump = {'name': job.name, 'freq': job.freq, 'rep': job.rep}
-            dump_json(to_dump)
+            dump_json_job(to_dump)
 
             slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
 
@@ -289,13 +293,13 @@ class WOD(threading.Thread):
 
         for job in self.job_list:
             to_dump = {'name': job.name, 'freq': job.freq, 'rep': job.rep}
-            dump_json(to_dump)
+            dump_json_job(to_dump)
             slowprint_with_input(f"{job.name} have been saved", parameters.print_delay)
 
     def load_job(self):
         """Load one or more exercises from the ones saved and starts it immediately"""
 
-        saved = paths.get_saved_jobs()
+        saved, paths = Path_class.get_saved_jobs()
 
         for idx in range(len(saved)):
             self.delayed_print(f"id {idx} : {saved[idx]}")
@@ -305,30 +309,25 @@ class WOD(threading.Thread):
             parameters.print_delay)
 
         if idx == "all":
-            for j in saved:
-                job = load_json(os.path.join(paths.saved_jobs, j))
-
-                new_job = Job(job['name'], job['freq'], job['rep'])
+            for j in paths:
+                new_job = load_json_job(j)
 
                 self.job_list.append(new_job)
                 new_job.start()
 
         elif "," in idx:
             for elem in idx.split(","):
-                to_load = self.get_indexed_elem(elem, saved)
-                job = load_json(os.path.join(paths.saved_jobs, to_load))
-
-                new_job = Job(job['name'], job['freq'], job['rep'])
+                to_load = self.get_indexed_elem(elem, paths)
+                new_job = load_json_job(to_load)
 
                 self.job_list.append(new_job)
                 new_job.start()
         else:
-            to_load = self.get_indexed_elem(idx, saved)
+            to_load = self.get_indexed_elem(idx, paths)
             if to_load is None:
                 return
-            job = load_json(os.path.join(paths.saved_jobs, to_load))
 
-            new_job = Job(job['name'], job['freq'], job['rep'])
+            new_job = load_json_job(to_load)
 
             self.job_list.append(new_job)
             new_job.start()
@@ -338,7 +337,7 @@ class WOD(threading.Thread):
 
         today = []
 
-        for elem in paths.get_progresses():
+        for elem in Path_class.get_progresses():
             date = elem.rsplit(":", 1)[0].split()[0].split("-")
             y = int(date[0])
             m = int(date[1])
@@ -353,3 +352,75 @@ class WOD(threading.Thread):
 
         for k, v in results.items():
             self.delayed_print(f"You did {v} {k} today!")
+
+    def create_group(self):
+        """Add workouts together to create a group"""
+
+        with self.lock:
+
+            # get desired name
+            name = slowprint_with_input("What's the name of the group?", parameters.print_delay)
+
+            # load all jobs
+            saved, paths = Path_class.get_saved_jobs()
+
+            # show them to user
+            for idx in range(len(saved)):
+                self.delayed_print(f"id {idx} : {saved[idx]}")
+
+            # wait for answer
+            answ = slowprint_with_input(
+                "Which exercise do you want to add?\nYou can either choose one or multiple (0,1,2...).\n",
+                parameters.print_delay)
+
+            # get desired jobs
+            jobs = []
+            if "," in answ:
+                for elem in answ.split(","):
+                    to_load = self.get_indexed_elem(elem, paths)
+                    jobs.append(to_load)
+
+            # create and save group
+            group = Group(name, jobs)
+            group.save()
+
+            # ask for run
+            answ = slowprint_with_input(
+                "Do you want to start the group? [yn]",
+                parameters.print_delay)
+
+            if answ in ['y', "yes"]:
+                group.start()
+                self.job_list += group.jobs
+
+    def run_group(self):
+        """Load and run a saved group"""
+
+        names, paths = Path_class.get_saved_groups()
+
+        for idx in range(len(names)):
+            self.delayed_print(f"id {idx} : {names[idx]}")
+
+        # wait for answer
+        answ = slowprint_with_input(
+            "Group you want to load?\nYou can either choose one or multiple (0,1,2...).\n",
+            parameters.print_delay)
+
+        # get desired jobs
+        groups = []
+        if "," in answ:
+            for elem in answ.split(","):
+                to_load = self.get_indexed_elem(elem, paths)
+                new_group = load_json_job(to_load)
+
+                groups.append(new_group)
+        else:
+
+            to_load = self.get_indexed_elem(answ, paths)
+            new_group = load_json_group(to_load)
+            groups.append(new_group)
+
+
+        for g in groups:
+            self.job_list+=g.jobs
+            g.start()

@@ -10,7 +10,8 @@ from Parameters import Parameters
 from Path import Paths
 
 parameters = Parameters
-paths = Paths()
+Path_class = Paths()
+
 
 
 def slowprint(msg, delay):
@@ -80,8 +81,14 @@ def other_todo(how_many, what):
     return str
 
 
-def dump_json(job):
-    file_path = os.path.join(paths.saved_jobs, job['name'].replace(" ", "_")) + ".json"
+def dump_json_job(job):
+    file_path = os.path.join(Path_class.saved_jobs, job['name'].replace(" ", "_")) + ".json"
+
+    with open(file_path, "w") as file:
+        json.dump(job, file)
+
+def dump_json_group(job):
+    file_path = os.path.join(Path_class.saved_groups, job['name'].replace(" ", "_")) + ".json"
 
     with open(file_path, "w") as file:
         json.dump(job, file)
@@ -93,7 +100,7 @@ def load_json(file_path):
 
 
 def dump_pkl(job):
-    file_path = os.path.join(paths.saved_jobs, job['name']) + ".pkl"
+    file_path = os.path.join(Path_class.saved_jobs, job['name']) + ".pkl"
 
     with open(file_path, "wb") as file:
         pickle.dump(job, file, pickle.HIGHEST_PROTOCOL)
