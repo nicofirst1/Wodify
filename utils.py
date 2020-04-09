@@ -68,7 +68,7 @@ def windows_beep():
         winsound.Beep(frequency, duration)
 
 
-def other_todo(how_many, what):
+def other_todo(how_many, what, show_time=None):
     todo_list = [
         "Come on fatty! Another %d %s to do!",
         "More coming! %d %s",
@@ -77,8 +77,12 @@ def other_todo(how_many, what):
         "You're never too tired for %d %s"
     ]
 
-    str = random.choice(todo_list) % (how_many, what)
-    return str
+    to_print = random.choice(todo_list) % (how_many, what)
+
+    if show_time is not None:
+        to_print+=f" [wait time ={show_time*60} m]"
+
+    return to_print
 
 
 def dump_json_job(job):

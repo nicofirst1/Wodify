@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import queue
 import re
 import threading
@@ -337,21 +337,33 @@ class WOD(threading.Thread):
 
         today = []
 
-        for elem in Path_class.get_progresses():
-            date = elem.rsplit(":", 1)[0].split()[0].split("-")
-            y = int(date[0])
-            m = int(date[1])
-            d = int(date[2])
-            date = datetime.datetime(y, m, d)
-            if date.date() != datetime.datetime.today().date():
-                continue
-            what = elem.rsplit(":", 1)[1].split(",")
-            today.append(what)
+        prgs=Path_class.get_progresses()
+        # filter by today date
+        prgs=[elem.split(" ",1)[1] for elem in prgs if datetime.today().date().__str__() in elem]
 
-        results = count_how_may(today)
+        # estimate total time taken
+        dur=[prgs[0].rsplit(":",1)[0],prgs[-1].rsplit(":",1)[0]]
+        dur=[elem.split(".")[0] for elem in dur]
+        dur=datetime.strptime(dur[1],"%H:%M:%S")-datetime.strptime(dur[0],"%H:%M:%S")
 
-        for k, v in results.items():
-            self.delayed_print(f"You did {v} {k} today!")
+        # get repetitions
+        prgs=[elem.rsplit(":",1)[1] for elem in prgs ]
+        prgs=[elem.split(",") for elem in prgs]
+
+        rep_dict={}
+        for k,v in prgs:
+
+            if k not in rep_dict.keys():
+                rep_dict[k]=0
+
+            rep_dict[k]+=int(v)
+
+
+        self.delayed_print(f"Today your workout lasted {dur}\nYou did:")
+
+
+        for k, v in rep_dict.items():
+            self.delayed_print(f"- {v} {k}")
 
     def create_group(self):
         """Add workouts together to create a group"""

@@ -56,14 +56,14 @@ class Job(threading.Thread):
         print(f"Starting {self.name}\n")
 
         # sleep before actually starting the process
-        random_wait = random.randint(0, self.freq[0]) * 60
+        random_wait = random.randint(0, self.freq[0]) *60
         time.sleep(random_wait)
 
         # while the stop timer is not set
         while not self.stop.is_set():
 
             # define a random wait time
-            random_wait = random.randint(self.freq[0], self.freq[1]) * 60
+            random_wait = random.randint(self.freq[0], self.freq[1]) *60
 
             # wait
             while not self.stop.wait(timeout=random_wait):
@@ -71,7 +71,7 @@ class Job(threading.Thread):
                 # define random repetitions
                 random_rep = random.randint(self.rep[0], self.rep[1])
                 # print it
-                print(other_todo(random_rep, self.name))
+                print(other_todo(random_rep, self.name,show_time=random_wait))
 
                 # beep
                 if parameters.OS == "U" or parameters.OS == "M":
