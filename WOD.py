@@ -170,6 +170,7 @@ class WOD(threading.Thread):
                 parameters.print_delay)
 
             jobs = []
+            idx+=","
             # if there are multiple jobs to change
             if "," in idx:
                 for elem in idx.split(","):
@@ -178,9 +179,7 @@ class WOD(threading.Thread):
                     if to_change is None: continue
 
                     jobs.append(to_change)
-            else:
-                to_change = self.get_indexed_elem(idx, self.job_list)
-                if to_change is None: return
+
 
             self.delayed_print("You can leave the current value by pressing 'Enter")
             # for every job that needs to be changed
