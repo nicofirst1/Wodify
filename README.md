@@ -1,23 +1,27 @@
 # Intro
 Do you find yourself staring at a computer for most of your time?
-Do you feel more tired by the day?
-After that last pizza you just rolled from the kitchen to the bedroom?
+
+Do you feel tired every day?
+
+Would you like to stay fit during this quarantine?
 
 Here I am to help!
+
 I am a simple and easy program which will remind you to do some workout once in a while.
-Just download me and start me with:
+Just clone the repo start me with:
 
 `python main.py`
 
-And you'll fit again in no time.
 
 ## How does it work?
 Wodify goes by the philosophy of 'random is better'.
-When entering an exercise you will have two specify three things:
+
+When adding a custom exercise you will have two specify three things:
+
 - A name for the workout.
-- Time range _[min,max]_ : two integers slit by a comma which will represent the random range where to take the waiting time from. 
-For example if you enter [5,10] you will reminded to exercise every __X__ minutes where _X_ is in range [5,10].
-- Repetition range _[min,max]_: s ame principle as before, this will be the number of repetitions to execute for your workout.
+- A time range _[min,max]_ : two integers split by a comma which will represent the random range where to take the waiting time from. 
+For example if you enter [5,10] you will reminded to exercise every __X__ minutes where _X_ is in range [5,10] minutes.
+- Repetition range _[min,max]_: same principle as before, this will be the number of repetitions to execute for your workout.
 
 ## Additional Infos
 

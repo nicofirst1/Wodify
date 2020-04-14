@@ -23,7 +23,7 @@ def tutotrial():
     if yn.lower() == "y":
         slowprint_with_delay("That's the spirit", print_delay, final_delay)
     else:
-        slowprint_with_delay("As if your opinion matters...", print_delay, final_delay)
+        slowprint_with_delay("Well, let's do it anyway", print_delay, final_delay)
 
     slowprint_with_delay(
         "First, you must know that I'll read your message when, and only when, you see the '>' symbol at the start of the sentence",
@@ -37,10 +37,7 @@ def tutotrial():
     h = slow_print_input_ingore_enter("", print_delay)
 
     if h.strip() != "h" and h.strip() != "help":
-        slowprint_with_delay("Oh no, I didn't know you were stupid...", print_delay, final_delay)
-        slowprint_with_delay("I'm ...", print_delay, final_delay)
-        slowprint_with_delay("I'm sorry about that", print_delay, final_delay)
-        slowprint_with_delay("Here, let me help", print_delay, final_delay)
+        slowprint_with_delay("Let's pretend you did it right", print_delay, final_delay)
         slowprint_with_delay("> h", print_delay + 0.5, final_delay)
 
     wod.help()
@@ -66,8 +63,7 @@ def tutotrial():
 
     if re.fullmatch(format_re, freq) is None:
         slowprint_with_delay(
-            "Seriously?\nYou know what, I just put you in an while loop...\nYou can do whatever you want here,"
-            " be as stupid as you want.\nThe only thing that changes is the time you loose.\n",
+            "Seriously?\nYou know what, I just put you in an while loop...\nYou can do whatever you want here.\nThe only thing that changes is the time you loose.\n",
             print_delay, final_delay)
         slowness = 0.1
         while re.fullmatch(format_re, freq) is None:
@@ -75,7 +71,7 @@ def tutotrial():
             freq = slow_print_input_ingore_enter("Now insert the time frequency", print_delay + slowness)
             slowness += 0.1
     else:
-        slowprint_with_delay("Nice! You are smarter than you look! (must be that nerdy face of yours)", print_delay,
+        slowprint_with_delay("Nice! You are smarter than you look!", print_delay,
                              final_delay)
 
     rep = slow_print_input_ingore_enter(
@@ -95,7 +91,7 @@ def tutotrial():
             rep = slow_print_input_ingore_enter(f"Insert the number of repetitions", print_delay)
 
     else:
-        slowprint_with_delay("Good job! I'll give you a banana when you're done with this", print_delay, final_delay)
+        slowprint_with_delay("Good job!", print_delay, final_delay)
 
     slowprint_with_delay("So now the timer has started and it will soon go off (increase the speakers volume)",
                          print_delay, final_delay)
