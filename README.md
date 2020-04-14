@@ -23,6 +23,8 @@ When adding a custom exercise you will have two specify three things:
 For example if you enter [5,10] you will reminded to exercise every __X__ minutes where _X_ is in range [5,10] minutes.
 - Repetition range _[min,max]_: same principle as before, this will be the number of repetitions to execute for your workout.
 
+A quick video tutorial is avaiable ![on youtube](https://youtu.be/pbNjdDRvRw0).
+
 ## Additional Infos
 
 - To enable sound on Mac\Linux you should install "sox"
