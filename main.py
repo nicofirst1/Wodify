@@ -114,7 +114,7 @@ def tutotrial():
     slowprint_with_delay(
         "I now you like me, and I like you too, but for your sanity I strongly advise you to turn the tutorial off for the next run.",
         print_delay, final_delay)
-    slowprint_with_delay("In the main.py file there is a big TUTORIAL variable you should set to false.", print_delay,
+    slowprint_with_delay("In the Parameters.py file there is a big TUTORIAL variable you should set to false.", print_delay,
                          final_delay)
     slowprint_with_delay("Is up to you.", print_delay, final_delay)
     slowprint_with_delay("See you little bitch", print_delay, final_delay)
